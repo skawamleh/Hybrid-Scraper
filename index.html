@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OnHighway Demand Forecasting Console</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">OnHighway Finance Control</p>
+          <h1>Demand Forecasting Console</h1>
+          <p class="subhead">
+            Blend historical shipment volumes with financial levers to predict future
+            demand and cash exposure.
+          </p>
+        </div>
+        <div class="header-actions">
+          <button class="secondary" id="loadSample">Load sample data</button>
+          <button class="primary" id="generateForecast">Generate forecast</button>
+        </div>
+      </header>
+
+      <section class="grid kpi-grid">
+        <article class="kpi-card">
+          <p class="kpi-label">Forecast horizon</p>
+          <div class="kpi-value"><span id="horizonValue">6</span> months</div>
+          <p class="kpi-footnote">Rolling cadence for cash planning</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-label">Projected revenue impact</p>
+          <div class="kpi-value" id="revenueImpact">$0.00M</div>
+          <p class="kpi-footnote">Based on average revenue per shipment</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-label">MAPE</p>
+          <div class="kpi-value" id="mapeValue">--</div>
+          <p class="kpi-footnote">Accuracy on the most recent 6 months</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-label">Bias</p>
+          <div class="kpi-value" id="biasValue">--</div>
+          <p class="kpi-footnote">Forecast vs. actual volume</p>
+        </article>
+      </section>
+
+      <section class="grid main-grid">
+        <section class="panel">
+          <h2>Forecast inputs</h2>
+          <p class="section-note">Tune levers to model upside, risk, and working capital exposure.</p>
+          <form id="forecastForm">
+            <label>
+              Historical volumes (units, monthly)
+              <textarea id="historicalData" rows="6" placeholder="1200, 1350, 1280, 1420"></textarea>
+            </label>
+            <div class="form-row">
+              <label>
+                Forecast horizon (months)
+                <input type="number" id="forecastHorizon" min="3" max="24" value="6" />
+              </label>
+              <label>
+                Revenue per unit ($)
+                <input type="number" id="revenuePerUnit" min="0" step="0.01" value="850" />
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                Seasonality weight
+                <input type="range" id="seasonalityWeight" min="0" max="1" step="0.05" value="0.5" />
+                <span class="range-value" id="seasonalityValue">0.50</span>
+              </label>
+              <label>
+                Trend adjustment (%)
+                <input type="number" id="trendAdjustment" min="-10" max="15" step="0.1" value="2.5" />
+              </label>
+            </div>
+            <label>
+              Controller notes
+              <textarea id="controllerNotes" rows="3" placeholder="Macro headwinds, planned promotions, fleet expansion..."></textarea>
+            </label>
+          </form>
+          <div class="callout">
+            <h3>Finance controller checklist</h3>
+            <ul>
+              <li>Validate freight index + fuel surcharge inputs weekly.</li>
+              <li>Align forecast horizon to quarterly close cadence.</li>
+              <li>Flag months with >8% variance for procurement review.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Demand outlook</h2>
+              <p class="section-note">Actuals vs. forecast with trend + seasonal adjustment.</p>
+            </div>
+            <div class="legend">
+              <span class="legend-item"><span class="dot actual"></span>Actual</span>
+              <span class="legend-item"><span class="dot forecast"></span>Forecast</span>
+            </div>
+          </div>
+          <div class="chart" id="chart"></div>
+          <div class="table-wrapper">
+            <table id="forecastTable">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Actual</th>
+                  <th>Forecast</th>
+                  <th>Variance</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
